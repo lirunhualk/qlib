@@ -71,6 +71,7 @@ class MarketDataLoader:
         market["trade_days_to_expiry"] = market.groupby("ts_code").cumcount(ascending=False)
         market["calendar_days_to_expiry"] = (market["delist_ts"] - market["trade_date"]).dt.days
         market["spot_close"] = market["spot_close"].astype(float)
+        market["spot_open"] = market["spot_open"].astype(float)
         market["basis_points"] = market["spot_close"] - market["close"]
         market["discount_rate_spot"] = market["basis_points"] / market["spot_close"]
         market["discount_rate_fut"] = market["basis_points"] / market["close"]
@@ -157,7 +158,7 @@ class MarketDataLoader:
     def _load_spot_daily(self, spot_code: str, start_dt: int, end_dt: int) -> pd.DataFrame:
         sql = text(
             """
-            SELECT dt, close AS spot_close
+            SELECT dt, open AS spot_open, close AS spot_close
             FROM ts_index_daily
             WHERE ts_code = :spot_code
               AND dt BETWEEN :start_dt AND :end_dt

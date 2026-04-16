@@ -23,16 +23,23 @@
 
 ## 关键假设
 
-- 收益口径：
-  使用合约收盘价计算持有收益；换仓日假设以当日 `VWAP` 成交。
-- `VWAP` 近似：
-  `amount * 10000 / (vol * multiplier)`；若分母缺失则退化为收盘价。
+- 信号时点：
+  `T-1` 日收盘后截面的合约信息生成下一交易日的目标合约。
+- 执行时点：
+  `T` 日 `open` 执行。
+- 收益拆分：
+  不换仓日按 `昨日收盘 -> 今日收盘`；
+  换仓日按 `旧合约昨日收盘 -> 今日开盘` 加 `新合约今日开盘 -> 今日收盘`。
+- 可执行性约束：
+  在 `T-1/T-open` 框架下，信号日剩余交易日 `<= 1` 的合约不允许作为下一交易日的新目标持仓。
 - 交易成本：
   默认单边 `1bp`，换仓日按双边扣减。
 - 年化贴水：
   使用 `(现货 - 期货) / 现货 * 365 / 距离到期日自然日`。
 - 年化指标：
   使用与 `qlib.contrib.evaluate.risk_analysis(..., mode="product")` 一致的复利口径，本地兼容实现按 `252` 交易日年化。
+- 原生图表：
+  使用 qlib `contrib.report` 的原生图表布局风格导出 `HTML` 报告。
 
 ## 运行方式
 
@@ -55,10 +62,12 @@ python .\lrh\im_when_rollover\run_backtest.py `
   --codes IM `
   --start-date 2022-07-22 `
   --end-date 2026-04-10 `
-  --output-dir .\lrh\im_when_rollover\outputs\im_sample
+  --output-dir .\lrh\im_when_rollover\report
 ```
 
 ## 输出文件
+
+默认输出到 `D:\github\qlib\lrh\im_when_rollover\report`。
 
 每个品种会生成：
 
@@ -67,9 +76,14 @@ python .\lrh\im_when_rollover\run_backtest.py `
 - `roll_events.csv`: 换仓事件明细
 - `market_snapshot.csv`: 合约横截面快照
 - `daily_returns.csv`: 日收益明细（可用 `--skip-daily` 跳过）
+- `index.html`: 品种级报告入口
+- `<strategy>/report.html`: 单策略原生 qlib 风格图表报告
+- `<strategy>/report_normal.csv`: 可直接喂给 qlib `analysis_position.report_graph` 的标准表
+- `<strategy>/analysis_df.csv`: 可直接喂给 qlib `analysis_position.risk_analysis_graph` 的标准表
 
 根输出目录还会额外生成跨品种汇总文件：
 
 - `summary_all.csv`
 - `annual_returns_all.csv`
 - `roll_events_all.csv`
+- `index.html`

@@ -7,6 +7,7 @@ DEFAULT_MYSQL_DSN = "mysql+pymysql://root:pazqjj2021!@localhost:3306/aShare?char
 DEFAULT_COST_BPS_PER_SIDE = 1.0
 DEFAULT_LIQUID_TOP_N = 2
 DEFAULT_OUTPUT_DIRNAME = "outputs"
+DEFAULT_REPORT_DIRNAME = "report"
 
 
 @dataclass(frozen=True)

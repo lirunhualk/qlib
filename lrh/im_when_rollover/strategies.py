@@ -24,9 +24,9 @@ def select_target_contract(
 
 
 def _eligible(snapshot: pd.DataFrame) -> pd.DataFrame:
-    eligible = snapshot[snapshot["trade_days_to_expiry"] > 0].copy()
+    eligible = snapshot[snapshot["trade_days_to_expiry"] > 1].copy()
     if eligible.empty:
-        raise ValueError("No eligible contracts with at least one trading day remaining")
+        raise ValueError("No eligible contracts with enough remaining life for T-1 signal and T open execution")
     return eligible
 
 
@@ -113,7 +113,7 @@ def _best_carry_hold(spec: StrategySpec, snapshot: pd.DataFrame, current_contrac
         return _max_carry(snapshot)
 
     current_row = snapshot.loc[current_contract]
-    if int(current_row["trade_days_to_expiry"]) <= 0:
+    if int(current_row["trade_days_to_expiry"]) <= 1:
         eligible = _eligible(snapshot)
         later = eligible[eligible["delist_date"] > current_row["delist_date"]]
         return _max_carry(later if not later.empty else eligible)

@@ -32,15 +32,17 @@ def build_reports(daily_results: pd.DataFrame, fut_code: str, spot_code: str) ->
 
     for strategy, frame in daily.groupby("strategy", sort=False):
         frame = frame.sort_values("trade_date").reset_index(drop=True)
-        strat_ra = qlib_style_risk_analysis(frame["strategy_return"], N=252, mode="product")
+        strat_ra = qlib_style_risk_analysis(frame["strategy_return_net"], N=252, mode="product")
+        strat_ra_gross = qlib_style_risk_analysis(frame["strategy_return_gross"], N=252, mode="product")
         bench_ra = qlib_style_risk_analysis(frame["benchmark_return"], N=252, mode="product")
-        excess_ra = qlib_style_risk_analysis(frame["excess_return"], N=252, mode="product")
+        excess_ra = qlib_style_risk_analysis(frame["excess_return_net"], N=252, mode="product")
 
         years = _year_fraction(frame["trade_date"])
         total_return = frame["nav"].iloc[-1] - 1.0
         benchmark_total_return = frame["benchmark_nav"].iloc[-1] - 1.0
         relative_total_return = frame["relative_nav"].iloc[-1] - 1.0
         roll_count = int(frame["rolled"].sum())
+        total_transaction_cost = float(frame["transaction_cost"].sum())
 
         summary_rows.append(
             {
@@ -54,8 +56,11 @@ def build_reports(daily_results: pd.DataFrame, fut_code: str, spot_code: str) ->
                 "roll_count": roll_count,
                 "rolls_per_year": roll_count / years,
                 "annual_turnover": frame["turnover"].sum() / years,
+                "entry_count": int((frame["lifecycle_stage"] == "enter").sum()),
+                "total_transaction_cost": total_transaction_cost,
                 "total_return": total_return,
                 "annualized_return": float(strat_ra.loc["annualized_return", "risk"]),
+                "annualized_return_gross": float(strat_ra_gross.loc["annualized_return", "risk"]),
                 "max_drawdown": float(strat_ra.loc["max_drawdown", "risk"]),
                 "information_ratio": float(strat_ra.loc["information_ratio", "risk"]),
                 "benchmark_total_return": benchmark_total_return,
@@ -75,9 +80,11 @@ def build_reports(daily_results: pd.DataFrame, fut_code: str, spot_code: str) ->
                     "strategy": strategy,
                     "strategy_name": frame["strategy_name"].iloc[0],
                     "year": int(year),
-                    "strategy_return": (1.0 + year_frame["strategy_return"]).prod() - 1.0,
+                    "strategy_return_net": (1.0 + year_frame["strategy_return_net"]).prod() - 1.0,
+                    "strategy_return_gross": (1.0 + year_frame["strategy_return_gross"]).prod() - 1.0,
                     "benchmark_return": (1.0 + year_frame["benchmark_return"]).prod() - 1.0,
-                    "excess_return": (1.0 + year_frame["excess_return"]).prod() - 1.0,
+                    "excess_return_net": (1.0 + year_frame["excess_return_net"]).prod() - 1.0,
+                    "transaction_cost": float(year_frame["transaction_cost"].sum()),
                     "roll_count": int(year_frame["rolled"].sum()),
                 }
             )
@@ -89,13 +96,15 @@ def build_reports(daily_results: pd.DataFrame, fut_code: str, spot_code: str) ->
             "strategy",
             "strategy_name",
             "contract_before_trade",
-            "target_contract",
+            "signal_target_contract",
             "holding_contract",
-            "old_contract_trade_days_to_expiry",
-            "old_contract_vwap",
-            "new_contract_vwap",
+            "old_contract_signal_days_to_expiry",
+            "old_contract_open",
+            "old_contract_prev_close",
+            "new_contract_open",
             "new_contract_close",
             "holding_annualized_carry",
+            "transaction_cost",
         ]
     ]
     roll_events.insert(0, "fut_code", fut_code)

@@ -48,52 +48,86 @@ class StrategySelectionTest(unittest.TestCase):
 
 
 class BacktestEngineTest(unittest.TestCase):
-    def test_roll_day_uses_vwap_transition(self) -> None:
+    def test_roll_day_uses_open_transition_with_t_minus_1_signal(self) -> None:
         market = pd.DataFrame(
             [
                 {
                     "trade_date": pd.Timestamp("2024-04-10"),
                     "ts_code": "IM2404.CFX",
                     "delist_date": 20240419,
+                    "open": 100.5,
                     "close": 100.0,
                     "prev_close": None,
                     "vwap": 100.0,
                     "trade_days_to_expiry": 2,
                     "annualized_carry": 0.08,
+                    "spot_open": 100.5,
                     "spot_close": 101.0,
                 },
                 {
                     "trade_date": pd.Timestamp("2024-04-10"),
                     "ts_code": "IM2405.CFX",
                     "delist_date": 20240517,
+                    "open": 103.5,
                     "close": 103.0,
                     "prev_close": None,
                     "vwap": 103.0,
                     "trade_days_to_expiry": 20,
                     "annualized_carry": 0.07,
+                    "spot_open": 100.5,
                     "spot_close": 101.0,
                 },
                 {
                     "trade_date": pd.Timestamp("2024-04-11"),
                     "ts_code": "IM2404.CFX",
                     "delist_date": 20240419,
+                    "open": 100.5,
                     "close": 101.0,
                     "prev_close": 100.0,
                     "vwap": 101.5,
                     "trade_days_to_expiry": 1,
                     "annualized_carry": 0.09,
+                    "spot_open": 101.2,
                     "spot_close": 102.0,
                 },
                 {
                     "trade_date": pd.Timestamp("2024-04-11"),
                     "ts_code": "IM2405.CFX",
                     "delist_date": 20240517,
+                    "open": 103.5,
                     "close": 104.0,
                     "prev_close": 103.0,
                     "vwap": 103.5,
                     "trade_days_to_expiry": 19,
                     "annualized_carry": 0.07,
+                    "spot_open": 101.2,
                     "spot_close": 102.0,
+                },
+                {
+                    "trade_date": pd.Timestamp("2024-04-12"),
+                    "ts_code": "IM2404.CFX",
+                    "delist_date": 20240419,
+                    "close": 102.0,
+                    "open": 101.5,
+                    "prev_close": 101.0,
+                    "vwap": 101.6,
+                    "trade_days_to_expiry": 1,
+                    "annualized_carry": 0.09,
+                    "spot_open": 102.5,
+                    "spot_close": 103.0,
+                },
+                {
+                    "trade_date": pd.Timestamp("2024-04-12"),
+                    "ts_code": "IM2405.CFX",
+                    "delist_date": 20240517,
+                    "close": 106.0,
+                    "open": 104.5,
+                    "prev_close": 104.0,
+                    "vwap": 104.6,
+                    "trade_days_to_expiry": 18,
+                    "annualized_carry": 0.07,
+                    "spot_open": 102.5,
+                    "spot_close": 103.0,
                 },
             ]
         )
@@ -106,10 +140,16 @@ class BacktestEngineTest(unittest.TestCase):
             roll_days_before_expiry=1,
         )
         result = run_strategy_backtest(market, spec, BacktestConfig(cost_bps_per_side=1.0))
-        day2 = result[result["trade_date"] == pd.Timestamp("2024-04-11")].iloc[0]
+        self.assertEqual(len(result), 2)
+        day1 = result[result["trade_date"] == pd.Timestamp("2024-04-11")].iloc[0]
+        day2 = result[result["trade_date"] == pd.Timestamp("2024-04-12")].iloc[0]
 
-        expected_factor = (101.5 / 100.0) * (104.0 / 103.5) * (1 - 0.0001) ** 2
-        self.assertAlmostEqual(day2["strategy_return"], expected_factor - 1.0, places=10)
+        expected_entry_factor = (101.0 / 100.5) * (1 - 0.0001)
+        self.assertAlmostEqual(day1["strategy_return_net"], expected_entry_factor - 1.0, places=10)
+        self.assertEqual(day1["lifecycle_stage"], "enter")
+
+        expected_roll_factor = (101.5 / 101.0) * (106.0 / 104.5) * (1 - 0.0001) ** 2
+        self.assertAlmostEqual(day2["strategy_return_net"], expected_roll_factor - 1.0, places=10)
         self.assertTrue(bool(day2["rolled"]))
 
     def test_risk_analysis_product_mode(self) -> None:

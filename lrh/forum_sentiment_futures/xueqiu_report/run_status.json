@@ -1,0 +1,6 @@
+{
+  "status": "blocked_by_data_audit",
+  "message": "帖子文件不存在：D:\\github\\qlib\\lrh\\forum_sentiment_futures\\data\\xueqiu\\authorized_posts.csv；授权元数据不存在：D:\\github\\qlib\\lrh\\forum_sentiment_futures\\data\\xueqiu\\authorization.json",
+  "posts_file": "D:\\github\\qlib\\lrh\\forum_sentiment_futures\\data\\xueqiu\\authorized_posts.csv",
+  "authorization_metadata": "D:\\github\\qlib\\lrh\\forum_sentiment_futures\\data\\xueqiu\\authorization.json"
+}

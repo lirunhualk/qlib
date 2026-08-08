@@ -1,0 +1,62 @@
+{
+  "eligible": false,
+  "reasons": [
+    "没有可用于回测的雪球帖子"
+  ],
+  "requested_start": "2021-07-26",
+  "requested_end": "2026-07-24",
+  "row_count": 0,
+  "first_post": null,
+  "last_post": null,
+  "authorized_fraction": 0.0,
+  "point_in_time_content_fraction": 0.0,
+  "point_in_time_metrics_fraction": 0.0,
+  "precise_timestamp_fraction": 0.0,
+  "duplicate_fraction": 0.0,
+  "by_code": [
+    {
+      "fut_code": "IF",
+      "post_count": 0,
+      "first_post": null,
+      "last_post": null,
+      "trading_day_coverage": 0.0,
+      "median_posts_per_active_day": 0.0,
+      "point_in_time_content_fraction": 0.0,
+      "max_membership_staleness_days": NaN,
+      "eligible": false
+    },
+    {
+      "fut_code": "IC",
+      "post_count": 0,
+      "first_post": null,
+      "last_post": null,
+      "trading_day_coverage": 0.0,
+      "median_posts_per_active_day": 0.0,
+      "point_in_time_content_fraction": 0.0,
+      "max_membership_staleness_days": NaN,
+      "eligible": false
+    },
+    {
+      "fut_code": "IH",
+      "post_count": 0,
+      "first_post": null,
+      "last_post": null,
+      "trading_day_coverage": 0.0,
+      "median_posts_per_active_day": 0.0,
+      "point_in_time_content_fraction": 0.0,
+      "max_membership_staleness_days": NaN,
+      "eligible": false
+    },
+    {
+      "fut_code": "IM",
+      "post_count": 0,
+      "first_post": null,
+      "last_post": null,
+      "trading_day_coverage": 0.0,
+      "median_posts_per_active_day": 0.0,
+      "point_in_time_content_fraction": 0.0,
+      "max_membership_staleness_days": NaN,
+      "eligible": false
+    }
+  ]
+}

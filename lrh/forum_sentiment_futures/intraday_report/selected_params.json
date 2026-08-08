@@ -1,0 +1,72 @@
+{
+  "intraday_overlay_config": {
+    "forum_panic_threshold": 0.8,
+    "market_panic_threshold": 0.35,
+    "long_score_threshold": 0.65,
+    "forum_excitement_threshold": 1.6,
+    "short_score_threshold": 0.65,
+    "calm_market_abs_z": 1.2,
+    "max_holding_bars": 1,
+    "stop_loss": 0.006,
+    "take_profit": 0.009,
+    "target_volatility": 0.06,
+    "max_position_size": 0.5,
+    "min_position_size": 0.1,
+    "max_trades_per_day": 1,
+    "cooldown_bars": 2,
+    "daily_loss_limit": 0.012,
+    "commission_bps_per_side": 1.0,
+    "slippage_bps_per_side": 1.0,
+    "allow_long": false,
+    "allow_short": true,
+    "long_signal_start_slot": 0,
+    "long_signal_end_slot": 14,
+    "long_max_momentum_30m": -0.005,
+    "long_require_new_relevant_token": false,
+    "signal_start_slot": 4,
+    "signal_end_slot": 7,
+    "require_new_relevant_token": true,
+    "min_activity_z": -0.5,
+    "max_activity_z": 1.0,
+    "min_day_return": -99.0,
+    "max_day_return": 99.0
+  },
+  "trend_core_config": {
+    "trend_horizons": [
+      [
+        20,
+        5
+      ],
+      [
+        60,
+        10
+      ],
+      [
+        120,
+        20
+      ]
+    ],
+    "minimum_positive_horizons": 2,
+    "volatility_days": 20,
+    "target_volatility": 0.1,
+    "max_position_size": 0.5,
+    "rebalance_interval_days": 5,
+    "position_step": 0.1,
+    "commission_bps_per_side": 1.0
+  },
+  "train_start": "2021-07-10",
+  "train_end": "2024-12-31",
+  "test_start": "2025-01-01",
+  "test_end": "2026-07-10",
+  "market_data_source": "Sina historical contract 15-minute bars",
+  "forum_data_source": "Eastmoney index-forum post timestamps and titles",
+  "hybrid_definition": "volatility-targeted trend core plus intraday forum overlay",
+  "overlay_eligibility_rule": {
+    "minimum_training_trades": 20,
+    "minimum_training_sharpe": 0.5,
+    "require_positive_training_return": true
+  },
+  "overlay_eligible_codes": [
+    "IH"
+  ]
+}

@@ -1,0 +1,1 @@
+Qlib-compatible daily report for the volatility-targeted trend core plus 15-minute forum-sentiment overlay. return is gross hybrid return, bench is net continuous-futures holding return, cost includes core commission plus intraday commission/slippage, and turnover is total notional turnover.

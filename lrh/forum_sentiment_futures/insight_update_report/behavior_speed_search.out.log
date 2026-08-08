@@ -1,0 +1,122 @@
+[behavior-search] 1/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 2/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 3/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 4/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 5/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 6/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 7/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 8/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 9/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 10/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 11/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 12/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 13/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 14/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 15/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 16/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 17/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 18/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 19/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 20/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 21/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 22/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 23/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 24/106 cross_attention_rebound_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 25/106 concise_extreme_reversal_long eligible=IH dev=0.0009 val=0.0002 trades=28
+[behavior-search] 26/106 concise_extreme_reversal_long eligible=IH dev=0.0014 val=0.0001 trades=28
+[behavior-search] 27/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 28/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 29/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 30/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 31/106 concise_extreme_reversal_long eligible=IF dev=0.0001 val=0.0007 trades=20
+[behavior-search] 32/106 concise_extreme_reversal_long eligible=IF dev=0.0003 val=0.0013 trades=20
+[behavior-search] 33/106 concise_extreme_reversal_long eligible=IH dev=0.0004 val=0.0005 trades=16
+[behavior-search] 34/106 concise_extreme_reversal_long eligible=IC,IH dev=0.0013 val=0.0003 trades=24
+[behavior-search] 35/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 36/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 37/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 38/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 39/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 40/106 concise_extreme_reversal_long eligible=IF dev=-0.0001 val=0.0006 trades=17
+[behavior-search] 41/106 concise_extreme_reversal_long eligible=IH dev=0.0004 val=0.0003 trades=13
+[behavior-search] 42/106 concise_extreme_reversal_long eligible=IH dev=0.0010 val=0.0002 trades=13
+[behavior-search] 43/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 44/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 45/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 46/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 47/106 concise_extreme_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 48/106 concise_extreme_reversal_long eligible=IF dev=0.0001 val=0.0005 trades=13
+[behavior-search] 49/106 special_attention_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 50/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 51/106 special_attention_reversal_long eligible=IH dev=0.0001 val=0.0008 trades=22
+[behavior-search] 52/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 53/106 special_attention_reversal_long eligible=IF dev=0.0000 val=0.0004 trades=11
+[behavior-search] 54/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 55/106 special_attention_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 56/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 57/106 special_attention_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 58/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 59/106 special_attention_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 60/106 sarcasm_bottom_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 61/106 symbol_exhaustion_short eligible=IF,IM dev=0.0007 val=0.0018 trades=58
+[behavior-search] 62/106 symbol_exhaustion_short eligible=IM dev=0.0003 val=0.0014 trades=14
+[behavior-search] 63/106 symbol_exhaustion_short eligible=IM dev=0.0007 val=0.0011 trades=22
+[behavior-search] 64/106 symbol_exhaustion_short eligible=IM dev=0.0005 val=0.0012 trades=22
+[behavior-search] 65/106 symbol_exhaustion_short eligible=IF,IH,IM dev=0.0008 val=0.0032 trades=66
+[behavior-search] 66/106 symbol_exhaustion_short eligible=IF,IM dev=0.0006 val=0.0026 trades=44
+[behavior-search] 67/106 symbol_exhaustion_short eligible=IF,IM dev=0.0006 val=0.0021 trades=45
+[behavior-search] 68/106 symbol_exhaustion_short eligible=IF,IM dev=0.0002 val=0.0028 trades=45
+[behavior-search] 69/106 cross_breadth_followthrough_short eligible=IF,IM dev=0.0014 val=0.0025 trades=209
+[behavior-search] 70/106 late_1445_followthrough_short eligible=IC,IH dev=0.0011 val=0.0031 trades=100
+[behavior-search] 71/106 cross_breadth_followthrough_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 72/106 late_1445_followthrough_short eligible=IC,IH dev=0.0017 val=0.0011 trades=47
+[behavior-search] 73/106 author_concentration_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 74/106 author_concentration_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 75/106 reaction_speed_reversal_short eligible=IC dev=0.0002 val=0.0009 trades=65
+[behavior-search] 76/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 77/106 reaction_speed_reversal_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 78/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 79/106 reaction_speed_reversal_short eligible=IC dev=0.0005 val=0.0017 trades=65
+[behavior-search] 80/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 81/106 reaction_speed_reversal_short eligible=IC dev=0.0001 val=0.0005 trades=22
+[behavior-search] 82/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 83/106 reaction_speed_reversal_short eligible=IC,IM dev=0.0008 val=0.0014 trades=88
+[behavior-search] 84/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 85/106 reaction_speed_reversal_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 86/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 87/106 reaction_speed_reversal_short eligible=IC,IM dev=0.0008 val=0.0023 trades=88
+[behavior-search] 88/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 89/106 reaction_speed_reversal_short eligible=IC dev=0.0003 val=0.0005 trades=21
+[behavior-search] 90/106 reaction_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 91/106 activity_speed_reversal_short eligible=IH dev=0.0004 val=0.0006 trades=29
+[behavior-search] 92/106 activity_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 93/106 activity_speed_reversal_short eligible=IH dev=0.0005 val=0.0008 trades=15
+[behavior-search] 94/106 activity_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 95/106 activity_speed_reversal_short eligible=IH dev=0.0005 val=0.0012 trades=29
+[behavior-search] 96/106 activity_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 97/106 activity_speed_reversal_short eligible=IH dev=0.0003 val=0.0010 trades=15
+[behavior-search] 98/106 activity_speed_reversal_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 99/106 negative_expectation_trend_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 100/106 positive_expectation_trend_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 101/106 negative_expectation_trend_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 102/106 positive_expectation_trend_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 103/106 negative_expectation_trend_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 104/106 positive_expectation_trend_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 105/106 negative_expectation_trend_short eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] 106/106 positive_expectation_trend_long eligible=- dev=0.0000 val=0.0000 trades=0
+[behavior-search] selected {"family": "late_1445_followthrough_short", "feature_column": "cross_attention_breadth", "feature_threshold": 0.5, "direction": -1, "signal_start_slot": 14, "signal_end_slot": 14, "event_column": "post_count", "event_threshold": 0.0, "min_day_return": null, "max_day_return": -0.003, "min_bar_return": null, "max_bar_return": null, "min_attention_persistence": 0.0, "require_moderate_volatility": false, "max_holding_bars": 1, "stop_loss": 0.004, "take_profit": 0.006, "target_volatility": 0.05, "max_position_size": 0.35, "min_position_size": 0.05} deployed=True
+
+Updated strategy comparison:
+ fut_code period  updated_annualized_return  legacy_annualized_return  annualized_return_delta  updated_annualized_volatility  updated_max_drawdown  behavior_trade_count
+       IC   full                   0.043425                  0.041283                 0.002143                       0.059237             -0.065805                    45
+       IC   test                   0.115344                  0.116362                -0.001018                       0.078518             -0.044958                    13
+       IF   full                   0.021857                  0.021857                 0.000000                       0.055651             -0.077335                     0
+       IF   test                   0.030712                  0.030712                 0.000000                       0.060408             -0.038098                     0
+       IH   full                   0.004474                  0.004034                 0.000440                       0.050985             -0.067328                    88
+       IH   test                  -0.005742                 -0.001890                -0.003852                       0.051898             -0.056569                    20
+       IM   full                   0.030262                  0.030262                 0.000000                       0.057457             -0.071870                     0
+       IM   test                   0.072286                  0.072286                 0.000000                       0.070722             -0.047375                     0
+PORTFOLIO   full                   0.024360                  0.023578                 0.000782                       0.048058             -0.049167                   133
+PORTFOLIO   test                   0.052806                  0.054068                -0.001262                       0.056477             -0.040734                    33
+
+Reports written to: D:\github\qlib\lrh\forum_sentiment_futures\insight_update_report\behavior

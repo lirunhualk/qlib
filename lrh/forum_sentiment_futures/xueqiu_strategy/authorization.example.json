@@ -1,0 +1,8 @@
+{
+  "provider": "replace-with-authorized-provider-name",
+  "authorized_use": false,
+  "content_snapshot_at_creation": false,
+  "interaction_metrics_point_in_time": false,
+  "timezone": "Asia/Shanghai",
+  "license_reference": "replace-with-contract-or-export-reference"
+}

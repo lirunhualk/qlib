@@ -1,0 +1,9 @@
+{
+  "numeric_reconciliation": "passed",
+  "source_code_hashes": "verified",
+  "regression_tests": 34,
+  "regression_failures": 0,
+  "figure": "equity_drawdown.png",
+  "html_render_verified": false,
+  "html_preview_limitation": "Browser tool blocks local file protocol; PNG rendered independently with matplotlib"
+}

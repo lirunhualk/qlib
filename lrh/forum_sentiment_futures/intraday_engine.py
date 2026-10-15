@@ -121,7 +121,9 @@ def _position_size(row: pd.Series, config: IntradayStrategyConfig) -> float:
     if realized_vol is None or realized_vol <= 0:
         return 0.0
     raw_size = config.target_volatility / realized_vol
-    return float(np.clip(raw_size, config.min_position_size, config.max_position_size))
+    if raw_size < config.min_position_size:
+        return 0.0
+    return float(min(raw_size, config.max_position_size))
 
 
 def _exit_from_bar(
@@ -136,6 +138,10 @@ def _exit_from_bar(
     if direction > 0:
         stop_price = entry_price * (1.0 - config.stop_loss)
         take_price = entry_price * (1.0 + config.take_profit)
+        if float(row["open"]) <= stop_price:
+            return float(row["open"]), "stop_gap"
+        if float(row["open"]) >= take_price:
+            return take_price, "take_gap"
         if float(row["low"]) <= stop_price:
             return stop_price, "stop_loss"
         if float(row["high"]) >= take_price:
@@ -143,6 +149,10 @@ def _exit_from_bar(
     else:
         stop_price = entry_price * (1.0 + config.stop_loss)
         take_price = entry_price * (1.0 - config.take_profit)
+        if float(row["open"]) >= stop_price:
+            return float(row["open"]), "stop_gap"
+        if float(row["open"]) <= take_price:
+            return take_price, "take_gap"
         if float(row["high"]) >= stop_price:
             return stop_price, "stop_loss"
         if float(row["low"]) <= take_price:
@@ -175,6 +185,8 @@ def run_intraday_backtest(
         raise ValueError(f"Intraday features missing columns: {sorted(missing)}")
     if signal_column is not None and signal_column not in features.columns:
         raise ValueError(f"Intraday features missing signal column: {signal_column}")
+    if features["fut_code"].nunique() > 1:
+        raise ValueError("Run the intraday engine separately for each futures product")
 
     source = features.copy()
     source["trade_date"] = pd.to_datetime(source["trade_date"]).dt.normalize()
@@ -216,7 +228,7 @@ def run_intraday_backtest(
                 and day_trade_count < config.max_trades_per_day
                 and day_net_nav - 1.0 > -config.daily_loss_limit
             ):
-                position_size = _position_size(row, config)
+                position_size = float((pending_signal or {}).get("position_size", 0.0))
                 if position_size > 0:
                     direction = pending_direction
                     entry_price = float(row["open"])
@@ -249,8 +261,8 @@ def run_intraday_backtest(
                     turnover = 2.0 * position_size
                     transaction_cost = turnover * config.total_cost_rate_per_side
                     net_return = gross_return - transaction_cost
-                    day_gross_nav *= 1.0 + gross_return
-                    day_net_nav *= 1.0 + net_return
+                    day_gross_nav += gross_return
+                    day_net_nav += net_return
                     day_cost += transaction_cost
                     day_turnover += turnover
                     trade_rows.append(
@@ -326,6 +338,7 @@ def run_intraday_backtest(
                     pending_direction = signal
                     pending_signal = {
                         "signal_time": row["bar_end"],
+                        "position_size": _position_size(row, config),
                         "forum_panic_z": row.get("forum_panic_z", np.nan),
                         "forum_excitement_z": row.get("forum_excitement_z", np.nan),
                         "market_panic_z": row.get("market_panic_z", np.nan),
@@ -387,7 +400,7 @@ def performance_metrics(daily: pd.DataFrame) -> dict:
     annualized_return = float((1.0 + total_return) ** (252.0 / observations) - 1.0)
     annualized_volatility = float(returns.std(ddof=0) * np.sqrt(252.0))
     sharpe = float(returns.mean() / returns.std(ddof=0) * np.sqrt(252.0)) if returns.std(ddof=0) > 0 else 0.0
-    drawdown = nav / nav.cummax() - 1.0
+    drawdown = nav / nav.cummax().clip(lower=1.0) - 1.0
     max_drawdown = float(drawdown.min())
     calmar = annualized_return / abs(max_drawdown) if max_drawdown < 0 else 0.0
     return {

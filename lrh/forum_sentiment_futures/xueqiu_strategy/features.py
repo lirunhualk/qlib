@@ -139,6 +139,9 @@ def _map_posts_to_next_bar(
     valid = locations < len(bar_times)
     mapped = post_frame.loc[valid].copy()
     mapped["bar_end"] = pd.to_datetime(bar_times[locations[valid]])
+    mapped = mapped[
+        mapped["bar_end"].sub(mapped["publish_time"]).le(pd.Timedelta(minutes=15))
+    ].copy()
     return mapped
 
 
@@ -204,7 +207,9 @@ def build_xueqiu_intraday_features(
         raise ValueError(f"No mapped Xueqiu posts for {fut_code}")
     board_code = f"xueqiu_{fut_code}"
     posts["board_code"] = board_code
-    posts["publish_time"] = pd.to_datetime(posts["created_at"], errors="coerce")
+    posts["publish_time"] = pd.to_datetime(
+        posts.get("available_at", posts["created_at"]), errors="coerce"
+    )
     posts["title"] = posts["text"].where(
         posts["is_content_point_in_time"].fillna(False), ""
     )

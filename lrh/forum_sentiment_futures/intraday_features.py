@@ -188,7 +188,30 @@ def _map_posts_to_next_bar(posts: pd.DataFrame, bars: pd.DataFrame) -> pd.DataFr
     valid = locations < len(bar_times)
     mapped = post_frame.loc[valid].copy()
     mapped["bar_end"] = pd.to_datetime(bar_times[locations[valid]])
+    mapped = mapped[
+        mapped["bar_end"].sub(mapped["publish_time"]).le(pd.Timedelta(minutes=15))
+    ].copy()
     return mapped
+
+
+def _distinct_user_windows(
+    mapped_posts: pd.DataFrame, bars: pd.DataFrame, window: int
+) -> tuple[pd.Series, pd.Series]:
+    users_by_bar = mapped_posts.groupby("bar_end")["user_id"].agg(
+        lambda values: set(values.dropna().astype(str)).difference({"", "nan"})
+    ).to_dict()
+    rolling_counts = pd.Series(0.0, index=bars.index)
+    cumulative_counts = pd.Series(0.0, index=bars.index)
+    for indices in bars.groupby("trade_date", sort=False).groups.values():
+        recent: list[set[str]] = []
+        cumulative: set[str] = set()
+        for index in indices:
+            users = users_by_bar.get(bars.loc[index, "bar_end"], set())
+            recent.append(users)
+            cumulative.update(users)
+            rolling_counts.loc[index] = len(set().union(*recent[-window:]))
+            cumulative_counts.loc[index] = len(cumulative)
+    return rolling_counts, cumulative_counts
 
 
 def build_intraday_features(
@@ -261,6 +284,10 @@ def build_intraday_features(
         features[f"{column}_60m"] = _rolling_within_day(
             features[column], features["trade_date"], forum_window_bars
         )
+    distinct_rolling, distinct_cumulative = _distinct_user_windows(
+        mapped_posts, features, forum_window_bars
+    )
+    features["unique_user_count_60m"] = distinct_rolling
     denominator = features["post_count_60m"].clip(lower=1.0)
     features["activity_raw"] = (
         np.log1p(features["post_count_60m"])
@@ -310,9 +337,7 @@ def build_intraday_features(
     features["cumulative_post_count"] = _cumulative_within_day(
         features["post_count"], features["trade_date"]
     )
-    features["cumulative_unique_user_count"] = _cumulative_within_day(
-        features["unique_user_count"], features["trade_date"]
-    )
+    features["cumulative_unique_user_count"] = distinct_cumulative
     features["cumulative_special_event_count"] = _cumulative_within_day(
         features["concise_extreme_count"]
         + features["sarcasm_count"]

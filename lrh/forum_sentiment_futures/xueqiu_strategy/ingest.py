@@ -20,6 +20,7 @@ CANONICAL_COLUMNS = (
     "observed_at",
     "content_observed_at",
     "metrics_observed_at",
+    "available_at",
     "symbol_codes",
     "title",
     "text",
@@ -76,6 +77,29 @@ class XueqiuDataError(ValueError):
     """Raised when an export cannot be normalized without guessing."""
 
 
+def _strict_bool(value: Any) -> bool:
+    if isinstance(value, (bool, np.bool_)):
+        return bool(value)
+    if isinstance(value, str) and value.strip().lower() in {"true", "false"}:
+        return value.strip().lower() == "true"
+    raise XueqiuDataError("Boolean metadata must be true or false")
+
+
+def shanghai_timestamps(values: pd.Series) -> pd.Series:
+    def parse(value: Any) -> pd.Timestamp:
+        if pd.isna(value) or value == "":
+            return pd.NaT
+        if isinstance(value, (int, float, np.number)):
+            unit = "ms" if abs(float(value)) >= 1e11 else "s"
+            timestamp = pd.Timestamp(value, unit=unit, tz="UTC")
+        else:
+            timestamp = pd.to_datetime(value, errors="coerce")
+        if pd.notna(timestamp) and timestamp.tzinfo is not None:
+            return timestamp.tz_convert("Asia/Shanghai").tz_localize(None)
+        return timestamp
+    return pd.to_datetime(values.map(parse), errors="coerce")
+
+
 @dataclass(frozen=True)
 class AuthorizationMetadata:
     provider: str
@@ -105,11 +129,11 @@ class AuthorizationMetadata:
             raise XueqiuDataError("Xueqiu timestamps must be declared as Asia/Shanghai")
         return cls(
             provider=str(payload["provider"]).strip(),
-            authorized_use=bool(payload["authorized_use"]),
-            content_snapshot_at_creation=bool(
+            authorized_use=_strict_bool(payload["authorized_use"]),
+            content_snapshot_at_creation=_strict_bool(
                 payload["content_snapshot_at_creation"]
             ),
-            interaction_metrics_point_in_time=bool(
+            interaction_metrics_point_in_time=_strict_bool(
                 payload["interaction_metrics_point_in_time"]
             ),
             timezone=str(payload["timezone"]),
@@ -254,20 +278,10 @@ def normalize_xueqiu_frame(
     normalized["original_post_id"] = _string_series(
         normalized["original_post_id"]
     )
-    normalized["created_at"] = pd.to_datetime(
-        normalized["created_at"], errors="coerce"
-    )
-    normalized["observed_at"] = pd.to_datetime(
-        normalized["observed_at"], errors="coerce"
-    )
-    normalized["content_observed_at"] = pd.to_datetime(
-        normalized["content_observed_at"], errors="coerce"
-    )
-    normalized["metrics_observed_at"] = pd.to_datetime(
-        normalized["metrics_observed_at"], errors="coerce"
-    )
+    for column in ("created_at", "observed_at", "content_observed_at", "metrics_observed_at"):
+        normalized[column] = shanghai_timestamps(normalized[column])
     if default_observed_at is not None:
-        observed = pd.Timestamp(default_observed_at)
+        observed = shanghai_timestamps(pd.Series([default_observed_at])).iloc[0]
         normalized["observed_at"] = normalized["observed_at"].fillna(observed)
 
     provider = metadata.provider if metadata else default_provider
@@ -278,8 +292,9 @@ def normalize_xueqiu_frame(
     )
     normalized["title"] = normalized["title"].map(html_to_visible_text)
     normalized["text"] = normalized["text"].map(html_to_visible_text)
-    normalized["text"] = (
-        normalized["title"].str.cat(normalized["text"], sep=" ").str.strip()
+    normalized["text"] = normalized.apply(
+        lambda row: row["text"] if row["text"].startswith(row["title"])
+        else f'{row["title"]} {row["text"]}'.strip(), axis=1
     )
     normalized["source"] = _string_series(normalized["source"])
     normalized["source_url"] = _string_series(normalized["source_url"])
@@ -296,9 +311,12 @@ def normalize_xueqiu_frame(
         & normalized["created_at"].notna()
         & (
             normalized["content_observed_at"]
-            <= normalized["created_at"] + pd.Timedelta(minutes=15)
+            >= normalized["created_at"]
         )
     )
+    normalized["available_at"] = normalized[
+        ["created_at", "observed_at", "content_observed_at"]
+    ].max(axis=1)
     if metadata and metadata.interaction_metrics_point_in_time:
         normalized["metrics_observed_at"] = normalized[
             "metrics_observed_at"
@@ -349,7 +367,7 @@ def first_observed_post_snapshot(posts: pd.DataFrame) -> pd.DataFrame:
         return posts.copy()
     source = posts.copy()
     for column in ("created_at", "observed_at", "content_observed_at"):
-        source[column] = pd.to_datetime(source[column], errors="coerce")
+        source[column] = shanghai_timestamps(source[column])
     source["_effective_observed_at"] = (
         source["observed_at"]
         .fillna(source["content_observed_at"])

@@ -121,7 +121,17 @@ def run_trend_core(
             position.loc[contract_roll].abs() + previous_position.loc[contract_roll].abs()
         )
         transaction_cost = turnover * config.cost_rate_per_side
-        gross_return = position * market_return
+        if {"overnight_return", "intraday_return"}.issubset(frame.columns):
+            overnight = pd.to_numeric(frame["overnight_return"], errors="coerce")
+            intraday = pd.to_numeric(frame["intraday_return"], errors="coerce")
+            if overnight.isna().any() or intraday.isna().any():
+                raise ValueError("Missing executable overnight/intraday returns")
+            gross_return = (
+                (1.0 + previous_position * overnight)
+                * (1.0 + position * intraday) - 1.0
+            )
+        else:
+            gross_return = position * market_return
         net_return = gross_return - transaction_cost
 
         frame["core_signal_price"] = known_price

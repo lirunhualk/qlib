@@ -1,5 +1,9 @@
 # 财经论坛情绪股指期货策略
 
+最新审查与实际回测位于 `reviewed_report_20261011`，区间更新至 2026-10-09，
+并已修复成交时点、收益归因和作者广度问题。下方 2026-07 的结果属于旧区间留档；
+当前结论以 `reviewed_report_20261011/REPORT.md` 为准。
+
 本目录参考集思录文章中“用财经论坛行为数据生成股指期货信号”的研究思路，构建了
 `IF/IC/IH/IM` 四品种的可复现回测。文章没有公开完整原始数据和精确公式，因此这里是
 独立实现，不声称复刻博主实盘。
@@ -135,3 +139,25 @@ python .\lrh\forum_sentiment_futures\run_behavior_update_backtest.py `
 带服务承诺的机构级数据源。回测没有模拟盘口深度、涨跌停排队、保证金变化和资金容量。
 盘中增强样本仍少，尤其不能仅凭全期正收益判断可实盘。上线前应接入实时论坛流和正式
 分钟行情，并做仿真盘、延迟监控和逐笔滑点校准。
+
+## 2026-10-11 审查与真实回测
+
+本次按用户要求允许更换行为数据源，使用新抓取的东方财富指数股吧帖子和更新至
+2026-10-09 的期货行情。审查修复、训练与样本外分离、纯价格消融及成本敏感性见
+`REVIEW.md` 和 `reviewed_report_20261011/REPORT.md`；可打开的图表位于同目录
+`dashboard.html`。
+
+```powershell
+python .\lrh\forum_sentiment_futures\run_reviewed_backtest.py `
+  --start-date 2021-10-11 --end-date 2026-10-09
+```
+
+新的实时采集器保存首次观测时间和首次可见文本，不覆盖早期版本：
+
+```powershell
+python .\lrh\forum_sentiment_futures\collect_live_behavior.py --cycles 1
+python .\lrh\forum_sentiment_futures\collect_live_behavior.py --cycles 0 --poll-seconds 60
+```
+
+这两条命令分别是一次采集和持续采集，输出到 `data/eastmoney_live/posts.csv`。
+采集已实际验证；策略是否部署仍以回测门槛为准。

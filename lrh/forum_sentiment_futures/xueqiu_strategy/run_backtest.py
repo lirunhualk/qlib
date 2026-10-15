@@ -209,7 +209,7 @@ def _performance(returns: pd.Series) -> dict[str, float]:
         if values.std(ddof=0) > 0
         else 0.0
     )
-    drawdown = nav / nav.cummax() - 1.0
+    drawdown = nav / nav.cummax().clip(lower=1.0) - 1.0
     return {
         "observations": len(values),
         "annualized_return": annualized_return,
@@ -225,6 +225,35 @@ RETURN_COLUMNS = {
     "original_hybrid": "original_hybrid_return_net",
     "continuous_futures_hold": "futures_buy_hold_return",
 }
+
+
+def merge_xueqiu_overlay(baseline: pd.DataFrame, overlay: pd.DataFrame) -> pd.DataFrame:
+    keys = ["fut_code", "trade_date"]
+    mapping = {
+        "strategy_return_gross": "xueqiu_overlay_return_gross",
+        "transaction_cost": "xueqiu_overlay_transaction_cost",
+        "strategy_return_net": "xueqiu_overlay_return_net",
+        "turnover": "xueqiu_overlay_turnover",
+        "trade_count": "xueqiu_overlay_trade_count",
+    }
+    selected = overlay[keys + list(mapping)].rename(columns=mapping)
+    daily = baseline.merge(selected, on=keys, how="left", validate="one_to_one")
+    if daily[list(mapping.values())].isna().any().any():
+        raise ValueError("Xueqiu overlay calendar is incomplete")
+    daily["xueqiu_hybrid_return_gross"] = (
+        daily["core_return_gross"] + daily["xueqiu_overlay_return_gross"]
+    )
+    daily["xueqiu_hybrid_transaction_cost"] = (
+        daily["core_transaction_cost"] + daily["xueqiu_overlay_transaction_cost"]
+    )
+    daily["xueqiu_hybrid_return_net"] = (
+        daily["xueqiu_hybrid_return_gross"] - daily["xueqiu_hybrid_transaction_cost"]
+    )
+    daily["xueqiu_hybrid_turnover"] = (
+        daily["core_turnover"] + daily["xueqiu_overlay_turnover"]
+    )
+    daily["original_hybrid_return_net"] = daily["hybrid_return_net"]
+    return daily.sort_values(keys).reset_index(drop=True)
 
 
 def _build_comparison(
@@ -505,32 +534,9 @@ def main() -> int:
         if trade_frames
         else pd.DataFrame()
     )
-    daily = baseline.merge(
-        overlay,
-        on=["fut_code", "trade_date"],
-        how="left",
-        validate="one_to_one",
-        suffixes=("", "_overlay"),
-    )
-    daily["xueqiu_overlay_return_gross"] = daily["strategy_return_gross"]
-    daily["xueqiu_overlay_transaction_cost"] = daily["transaction_cost"]
-    daily["xueqiu_overlay_return_net"] = daily["strategy_return_net"]
-    daily["xueqiu_hybrid_return_gross"] = (
-        daily["core_return_gross"] + daily["xueqiu_overlay_return_gross"]
-    )
-    daily["xueqiu_hybrid_transaction_cost"] = (
-        daily["core_transaction_cost"]
-        + daily["xueqiu_overlay_transaction_cost"]
-    )
-    daily["xueqiu_hybrid_return_net"] = (
-        daily["xueqiu_hybrid_return_gross"]
-        - daily["xueqiu_hybrid_transaction_cost"]
-    )
-    daily["xueqiu_hybrid_turnover"] = (
-        daily["core_turnover"] + daily["turnover"]
-    )
-    daily["original_hybrid_return_net"] = daily["hybrid_return_net"]
-    daily = daily.sort_values(["fut_code", "trade_date"]).reset_index(drop=True)
+    daily = merge_xueqiu_overlay(baseline, overlay)
+    if not trades_all.empty:
+        trades_all = trades_all[trades_all["trade_date"].between(start, end)].copy()
 
     summary, annual = _build_comparison(daily, train_end)
     daily.to_csv(

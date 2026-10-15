@@ -121,7 +121,8 @@ def _file_lag_minutes(path: Path, as_of: pd.Timestamp) -> float:
 def _position_size(realized_volatility: float, direction: int) -> float:
     if direction == 0 or not np.isfinite(realized_volatility) or realized_volatility <= 0:
         return 0.0
-    size = float(np.clip(0.06 / realized_volatility, 0.10, 0.35))
+    raw_size = 0.06 / realized_volatility
+    size = 0.0 if raw_size < 0.10 else min(raw_size, 0.35)
     return direction * size
 
 
@@ -161,7 +162,7 @@ def main() -> int:
         end_date=as_of,
     )
     mapped_posts, _ = assign_posts_to_futures(
-        posts[posts["created_at"].le(as_of)],
+        posts[posts["available_at"].le(as_of)],
         membership,
         fut_codes=codes,
     )

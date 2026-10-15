@@ -3,4 +3,5 @@ __pycache__/
 data/
 report/
 *.pyc
+!reviewed_report_*/**/*.csv
 
